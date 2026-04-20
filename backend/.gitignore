@@ -1,0 +1,67 @@
+# -------------------------
+# Python
+# -------------------------
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+venv/
+env/
+.venv/
+
+*.log
+
+# Environment variables
+.env
+
+# FastAPI uploads (user files)
+app/uploads/
+
+# Vector databases
+app/vector_store/
+*.faiss
+*.pkl
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# -------------------------
+# Node / React
+# -------------------------
+
+frontend/node_modules/
+
+frontend/dist/
+
+npm-debug.log*
+yarn-error.log*
+
+# Vite
+frontend/.vite/
+
+# Coverage
+coverage/
+
+# -------------------------
+# Mongo local dumps
+# -------------------------
+
+dump/
+
+# -------------------------
+# Optional generated files
+# -------------------------
+
+*.sqlite3
+*.db
+
+# Temporary files
+*.tmp
+*.temp
