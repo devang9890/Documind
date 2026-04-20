@@ -1,5 +1,11 @@
+from pathlib import Path
+
 from langchain_community.vectorstores import FAISS
 from app.services.embeddings import embeddings
+
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+VECTOR_ROOT = BASE_DIR / "uploads" / "vector_indexes"
 
 
 def create_vector_store(chunks, user_id):
@@ -9,8 +15,9 @@ def create_vector_store(chunks, user_id):
         embeddings
     )
 
-    path = f"app/vector_store/{user_id}"
+    path = VECTOR_ROOT / str(user_id)
+    path.mkdir(parents=True, exist_ok=True)
 
-    vectors.save_local(path)
+    vectors.save_local(str(path))
 
-    return path
+    return str(path)
