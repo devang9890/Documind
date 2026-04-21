@@ -8,14 +8,14 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 VECTOR_ROOT = BASE_DIR / "uploads" / "vector_indexes"
 
 
-def create_vector_store(chunks, user_id):
+def create_vector_store(chunks, index_id):
 
     vectors = FAISS.from_texts(
         chunks,
         embeddings
     )
 
-    path = VECTOR_ROOT / str(user_id)
+    path = VECTOR_ROOT / str(index_id)
     path.mkdir(parents=True, exist_ok=True)
 
     vectors.save_local(str(path))

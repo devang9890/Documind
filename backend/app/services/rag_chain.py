@@ -17,17 +17,17 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 VECTOR_ROOT = BASE_DIR / "uploads" / "vector_indexes"
 
 
-def ask_pdf(question, user_id):
+def ask_pdf(question, vector_dir):
 
     # Load FAISS index
 
-    user_index_dir = VECTOR_ROOT / str(user_id)
+    index_dir = Path(vector_dir)
 
-    if not (user_index_dir / "index.faiss").exists() or not (user_index_dir / "index.pkl").exists():
-        raise ValueError("No processed PDF index found for this user. Upload a PDF first.")
+    if not (index_dir / "index.faiss").exists() or not (index_dir / "index.pkl").exists():
+        raise ValueError("No processed PDF index found for this document. Upload/select a PDF first.")
 
     db = FAISS.load_local(
-        str(user_index_dir),
+        str(index_dir),
         embeddings,
         allow_dangerous_deserialization=True
     )
