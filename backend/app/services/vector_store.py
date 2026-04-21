@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from langchain_community.vectorstores import FAISS
-from app.services.embeddings import embeddings
+from app.services.embeddings import get_embeddings
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -12,7 +12,7 @@ def create_vector_store(chunks, index_id):
 
     vectors = FAISS.from_texts(
         chunks,
-        embeddings
+        get_embeddings()
     )
 
     path = VECTOR_ROOT / str(index_id)

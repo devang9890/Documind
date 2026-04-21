@@ -4,7 +4,7 @@ from groq import Groq
 
 from langchain_community.vectorstores import FAISS
 
-from app.services.embeddings import embeddings
+from app.services.embeddings import get_embeddings()
 
 from app.core.config import GROQ_API_KEY
 
@@ -25,13 +25,12 @@ def ask_pdf(question, vector_dir):
 
     if not (index_dir / "index.faiss").exists() or not (index_dir / "index.pkl").exists():
         raise ValueError("No processed PDF index found for this document. Upload/select a PDF first.")
-
+        
     db = FAISS.load_local(
-        str(index_dir),
-        embeddings,
+        f"app/vector_store/{user_id}",
+        get_embeddings(),
         allow_dangerous_deserialization=True
     )
-
 
     # Retrieve relevant chunks
 
