@@ -1,16 +1,26 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.routes.auth import router as auth_router
 from app.routes.upload import router as upload_router
 from app.routes.chat import router as chat_router
 
-app = FastAPI()
 
+app = FastAPI(
+    title="DocuMind AI",
+    version="1.0"
+)
+
+
+# CORS
 app.add_middleware(
     CORSMiddleware,
+
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+
+        "https://documind-beta-nine.vercel.app"
     ],
 
     allow_credentials=True,
@@ -20,6 +30,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Auth routes
 app.include_router(
     auth_router,
@@ -27,20 +38,25 @@ app.include_router(
     tags=["Authentication"]
 )
 
+
 # Upload routes
 app.include_router(
     upload_router,
     prefix="/api/upload",
     tags=["Upload"]
 )
+
+
+# Chat routes
 app.include_router(
     chat_router,
     prefix="/api/chat",
     tags=["Chat"]
 )
 
+
 @app.get("/")
 def home():
     return {
-        "message":"DocuMind AI Running"
+        "message": "DocuMind AI Backend Running"
     }
