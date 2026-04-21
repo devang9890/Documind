@@ -1,71 +1,67 @@
-import { useState } from "react";
-
+import { useState, useRef } from "react";
+import { UploadCloud, Plus, Loader2 } from "lucide-react";
 import API from "../services/api";
 
-export default function PDFUploader({ onUploaded, compact = false }) {
-	const [file, setFile] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
+export default function PDFUploader({ onUploaded }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const fileInputRef = useRef(null);
 
-	const uploadPDF = async () => {
-		setError("");
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-		if (!file) {
-			setError("Please select a PDF.");
-			return;
-		}
+    setError("");
+    setLoading(true);
 
-		try {
-			setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
 
-			const formData = new FormData();
-			formData.append("file", file);
+      const res = await API.post("/upload/pdf", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-			const res = await API.post("/upload/pdf", formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-			});
+      if (typeof onUploaded === "function") {
+        onUploaded(res.data.document || null);
+      }
+    } catch (err) {
+      setError(err?.response?.data?.detail || "Failed to upload.");
+    } finally {
+      setLoading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
-			setFile(null);
+  return (
+    <div className="w-full">
+      <input
+        type="file"
+        accept=".pdf"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
 
-			if (typeof onUploaded === "function") {
-				onUploaded(res.data.document || null);
-			}
-		} catch (err) {
-			setError(err?.response?.data?.detail || "Upload failed.");
-		} finally {
-			setLoading(false);
-		}
-	};
+      <button
+        type="button"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={loading}
+        className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700/50 bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-100 hover:border-zinc-500 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-600 disabled:cursor-not-allowed disabled:opacity-60 transition-all duration-200 shadow-sm"
+      >
+        {loading ? (
+          <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
+        ) : (
+          <Plus className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
+        )}
+        <span>{loading ? "Uploading..." : "New Chat"}</span>
+      </button>
 
-	return (
-		<div className={compact ? "" : "p-6"}>
-			{!compact && (
-				<h1 className="text-2xl mb-4 text-zinc-900 dark:text-zinc-100">Upload PDF</h1>
-			)}
-
-			<div className={compact ? "space-y-2" : "flex items-center gap-3"}>
-				<input
-					type="file"
-					accept=".pdf"
-					onChange={(e) => setFile(e.target.files?.[0] || null)}
-					className="block w-full text-sm text-zinc-700 file:mr-4 file:rounded-xl file:border-0 file:bg-zinc-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-zinc-800 hover:file:bg-zinc-200 dark:text-zinc-200 dark:file:bg-zinc-900 dark:file:text-zinc-100 dark:hover:file:bg-zinc-800"
-				/>
-
-				<button
-					type="button"
-					onClick={uploadPDF}
-					disabled={loading}
-					className="inline-flex h-10 items-center justify-center rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-				>
-					{loading ? "Uploading…" : "Upload"}
-				</button>
-			</div>
-
-			{error && (
-				<div className="mt-2 text-xs text-red-700 dark:text-red-300">{error}</div>
-			)}
-		</div>
-	);
+      {error && (
+        <div className="mt-2 text-xs text-red-400 px-1">{error}</div>
+      )}
+    </div>
+  );
 }
