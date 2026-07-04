@@ -14,6 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showWakeupMessage, setShowWakeupMessage] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -25,15 +26,26 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
+    setShowWakeupMessage(false);
+
+    const wakeupTimer = setTimeout(() => {
+      setShowWakeupMessage(true);
+    }, 5000);
 
     try {
       await login({ email, password });
       const dest = location.state?.from?.pathname || "/";
       navigate(dest, { replace: true });
     } catch (err) {
-      setError(err?.response?.data?.detail || "Login failed.");
+      if (err.code === "ECONNABORTED" || err.message?.includes("timeout")) {
+        setError("The server took too long to respond. The backend may be experiencing a cold start. Please try again in a few seconds.");
+      } else {
+        setError(err?.response?.data?.detail || "Login failed. Please check your credentials.");
+      }
     } finally {
+      clearTimeout(wakeupTimer);
       setLoading(false);
+      setShowWakeupMessage(false);
     }
   };
 
@@ -72,6 +84,16 @@ export default function Login() {
                 className="mb-6 rounded-xl border border-red-900/50 bg-red-950/20 p-4 text-sm text-red-400 shadow-sm"
               >
                 {error}
+              </motion.div>
+            )}
+
+            {showWakeupMessage && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-6 rounded-xl border border-amber-900/50 bg-amber-950/20 p-4 text-sm text-amber-400 shadow-sm"
+              >
+                The server is taking longer than expected. It might be waking up from a cold start. Please stay on this page...
               </motion.div>
             )}
 

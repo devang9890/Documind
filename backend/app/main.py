@@ -55,6 +55,16 @@ app.include_router(
 )
 
 
+@app.on_event("startup")
+async def startup_event():
+    from app.db.mongodb import db
+    try:
+        await db.users.create_index("email", unique=True)
+        print("Database index verification: Unique index on email ensured.")
+    except Exception as e:
+        print(f"Warning: Could not create unique index on startup: {e}")
+
+
 @app.get("/")
 def home():
     return {

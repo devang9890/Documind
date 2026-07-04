@@ -16,6 +16,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showWakeupMessage, setShowWakeupMessage] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,15 +29,26 @@ export default function Register() {
     setError("");
     setSuccess("");
     setLoading(true);
+    setShowWakeupMessage(false);
+
+    const wakeupTimer = setTimeout(() => {
+      setShowWakeupMessage(true);
+    }, 5000);
 
     try {
       await register({ name, email, password });
       setSuccess("Account created successfully. Navigating to sign in...");
       setTimeout(() => navigate("/login", { replace: true }), 1500);
     } catch (err) {
-      setError(err?.response?.data?.detail || "Registration failed.");
+      if (err.code === "ECONNABORTED" || err.message?.includes("timeout")) {
+        setError("The server took too long to respond. The backend may be experiencing a cold start. Please try again in a few seconds.");
+      } else {
+        setError(err?.response?.data?.detail || "Registration failed. Please try again.");
+      }
     } finally {
+      clearTimeout(wakeupTimer);
       setLoading(false);
+      setShowWakeupMessage(false);
     }
   };
 
@@ -85,6 +97,16 @@ export default function Register() {
                 className="mb-6 rounded-xl border border-emerald-900/50 bg-emerald-950/20 p-4 text-sm text-emerald-400 shadow-sm"
               >
                 {success}
+              </motion.div>
+            )}
+
+            {showWakeupMessage && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-6 rounded-xl border border-amber-900/50 bg-amber-950/20 p-4 text-sm text-amber-400 shadow-sm"
+              >
+                The server is taking longer than expected. It might be waking up from a cold start. Please stay on this page...
               </motion.div>
             )}
 
