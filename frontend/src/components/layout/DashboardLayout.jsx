@@ -18,12 +18,12 @@ export default function DashboardLayout({ sidebar, main }) {
 
   return (
     <div className="flex h-screen w-full bg-[#09090b] text-zinc-100 overflow-hidden font-sans">
-      
+
       {/* Mobile Top Header */}
       <div className="lg:hidden absolute top-0 left-0 right-0 z-20 flex h-14 items-center justify-between border-b border-zinc-800/60 bg-[#09090bd9] px-4 backdrop-blur-md">
         <div className="flex items-center gap-2 font-semibold">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-100 text-zinc-950 text-xs shadow-sm">
-            DM
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-sm">
+            <BookOpen className="h-3.5 w-3.5" />
           </div>
           <span className="tracking-wide">DocuMind AI</span>
         </div>

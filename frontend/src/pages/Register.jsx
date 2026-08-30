@@ -64,7 +64,7 @@ export default function Register() {
               transition={{ duration: 0.4 }}
               className="flex items-center gap-3 mb-12"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-950 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_20px_rgba(134,59,255,0.2)]">
                 <BookOpen className="h-5 w-5" />
               </div>
               <span className="text-xl font-semibold tracking-wide text-zinc-100">DocuMind AI</span>

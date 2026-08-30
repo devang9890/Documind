@@ -20,7 +20,7 @@ export default function DocumentsSidebar({
       
       {/* 1. App Branding */}
       <div className="hidden lg:flex items-center gap-3 p-5 pb-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-950 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_15px_rgba(134,59,255,0.15)]">
           <BookOpen className="h-4 w-4" />
         </div>
         <div>

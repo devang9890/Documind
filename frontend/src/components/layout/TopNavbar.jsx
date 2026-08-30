@@ -1,3 +1,4 @@
+import { BookOpen } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 export default function TopNavbar({ onToggleSidebar, sidebarCollapsed }) {
@@ -17,8 +18,8 @@ export default function TopNavbar({ onToggleSidebar, sidebarCollapsed }) {
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-            <span className="text-sm font-semibold">DM</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+            <BookOpen className="h-4 w-4" />
           </div>
           <div className="leading-tight">
             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">DocuMind AI</div>
